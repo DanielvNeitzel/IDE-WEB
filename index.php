@@ -1,0 +1,423 @@
+<?php 
+
+error_reporting(0);
+ini_set(“display_errors”, 0 );
+
+$arquivo = 'arquivos/novo.html';
+
+include "conexao.php";
+
+?>
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <title>Editor HTML 3.5v</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="estilo.css">
+  <link rel="stylesheet" href="editorStyle.css">
+  <link rel="stylesheet" href="lib/codemirror.css">
+  <link rel="stylesheet" href="lib/font-awesome.css">
+  <!-- JavaScript -->
+  <script src="//cdn.jsdelivr.net/alertifyjs/1.10.0/alertify.min.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.10.0/css/alertify.min.css"/>
+  <!-- Default theme -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.10.0/css/themes/default.min.css"/>
+  <!-- Semantic UI theme -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.10.0/css/themes/semantic.min.css"/>
+  <!-- Bootstrap theme -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.10.0/css/themes/bootstrap.min.css"/>
+
+<!-- 
+    RTL version
+  -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.10.0/css/alertify.rtl.min.css"/>
+  <!-- Default theme -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.10.0/css/themes/default.rtl.min.css"/>
+  <!-- Semantic UI theme -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.10.0/css/themes/semantic.rtl.min.css"/>
+  <!-- Bootstrap theme -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.10.0/css/themes/bootstrap.rtl.min.css"/>
+  <script src="bases.js"></script>
+  <script>
+    var googletag = googletag || {};
+    googletag.cmd = googletag.cmd || [];
+    (function() {
+      var gads = document.createElement('script');
+      gads.async = true;
+      gads.type = 'text/javascript';
+      var useSSL = 'https:' == document.location.protocol;
+      gads.src = (useSSL ? 'https:' : 'http:') + 
+      '//www.googletagservices.com/tag/js/gpt.js';
+      var node = document.getElementsByTagName('script')[0];
+      node.parentNode.insertBefore(gads, node);
+    })();
+  </script>
+  <script type='text/javascript'>
+// GPT slots
+var gptAdSlots = [];
+googletag.cmd.push(function() {
+  var leaderMapping = googletag.sizeMapping().
+  // Mobile ad
+  addSize([0, 0], [320, 50]). 
+  // Vertical Tablet ad
+  addSize([468, 0], [468, 60]). 
+  // Horizontal Tablet
+  addSize([728, 0], [728, 90]).
+  // Desktop and bigger ad
+  addSize([970, 0], [[728, 90], [970, 90]]).build();
+  // addSize([970, 0], [728, 90]).build();
+  gptAdSlots[0] = googletag.defineSlot('/16833175/TryitLeaderboard', [[728, 90], [970, 90]], 'div-gpt-ad-1428407818244-0').
+  // gptAdSlots[0] = googletag.defineSlot('/16833175/TryitLeaderboard', [728, 90], 'div-gpt-ad-1428407818244-0').
+  defineSizeMapping(leaderMapping).addService(googletag.pubads());
+  googletag.pubads().setTargeting("content","try" + (function () {
+    var folder = location.pathname;
+    folder = folder.replace("/", "");
+    folder = folder.substr(0, folder.indexOf("/"));
+    return folder;
+  })()
+  );
+  googletag.enableServices();
+});
+</script>
+<script>
+  if (window.addEventListener) {              
+    window.addEventListener("resize", browserResize);
+  } else if (window.attachEvent) {                 
+    window.attachEvent("onresize", browserResize);
+  }
+  var xbeforeResize = window.innerWidth;
+
+  function browserResize() {
+    var afterResize = window.innerWidth;
+    if ((xbeforeResize < (970) && afterResize >= (970)) || (xbeforeResize >= (970) && afterResize < (970)) ||
+      (xbeforeResize < (728) && afterResize >= (728)) || (xbeforeResize >= (728) && afterResize < (728)) ||
+      (xbeforeResize < (468) && afterResize >= (468)) ||(xbeforeResize >= (468) && afterResize < (468))) {
+      xbeforeResize = afterResize;
+    googletag.cmd.push(function() {
+      googletag.pubads().refresh([gptAdSlots[0]]);
+    });
+  }
+  if (window.screen.availWidth <= 768) {
+    restack(window.innerHeight > window.innerWidth);
+  }
+  fixDragBtn();
+  showFrameSize();    
+}
+var fileID = "";
+var loadSave = false;
+function getSavedFile() {
+  loadSave = true;
+  var htmlCode;
+  var paramObj = {};
+  paramObj.fileid = "";
+  fileID = paramObj.fileid;
+  var paramA = JSON.stringify(paramObj);
+  var httpA = new XMLHttpRequest();
+  httpA.open("POST", globalURL, true);
+  httpA.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  httpA.onreadystatechange = function() {
+    if(httpA.readyState == 4 && httpA.status == 200) {
+      document.getElementById("textareaCode").value = httpA.responseText;
+      window.editor.getDoc().setValue(httpA.responseText);
+      loadSave = false;
+    }
+  }
+  httpA.send(paramA);   
+}
+
+</script>
+<!--[if lt IE 8]>
+<style>
+#textareacontainer, #iframecontainer {width:48%;}
+#container {height:500px;}
+#textarea, #iframe {width:90%;height:450px;}
+#textareaCode, #iframeResult {height:450px;}
+.stack {display:none;}
+</style>
+<![endif]-->
+</head>
+<body>
+  <form name="signup" method="post" action="cadastrando.php">
+    <div id="saveModal" class="w3-modal" style="z-index:4">
+      <div class="w3-modal-content">
+        <div class="w3-display-container">
+          <span onclick="hideAndResetModal()" class="w3-button w3-display-topright" style="font-weight:bold;">&times;</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="trytopnav">
+      <div id="opts-bar" class="w3-bar w3-light-grey" style="border-top:1px solid #f1f1f1;overflow:auto">
+        <!-- <a id="tryhome" href="" target="_blank" title="" class="w3-button w3-bar-item topnav-icons fa fa-home" style="font-size:28px;color:#999999;margin-top:-2px"></a> -->
+        <!-- <a href="javascript:void(0);" onclick="openMenu()" id="menuButton" title="Abrir Menu" class="w3-dropdown-click w3-button w3-bar-item topnav-icons" style="font-size:19px;color:#999999;margin-top:-2px"><i class="fa fa-question-circle-o" aria-hidden="true"></i></a> -->
+        <a class="w3-bar-item w3-button" title="Templates" data-toggle="modal" data-target="#menuTemplates"><i class="fa fa-th" style="font-size:26px;color:#4caf50;"></i><span style="position:relative;top:-4px;left:2px;"></span></a>
+        <a class="w3-bar-item w3-button" title="Informações" data-toggle="modal" data-target="#menuInfo"><i class="fa fa-question-circle-o" style="font-size:26px;color:#4caf50;"></i><span style="position:relative;top:-4px;left:2px;"></span></a>
+        <a class="w3-bar-item w3-button" title="Novo (Ctrl+Q)" data-toggle="modal" data-target="#menuNovoArquivo"><i class="fa fa-file-text" style="font-size:26px;color:#4caf50;"></i><span style="position:relative;top:-4px;left:2px;"></span></a>
+        <a class="w3-bar-item w3-button" title="Abrir (Ctrl+O)" data-toggle="modal" data-target="#menuAbrirArquivo"><i class="fa fa-folder-open" style="font-size:26px;color:#4caf50;"></i><span style="position:relative;top:-4px;left:2px;"></span></a>
+        <a class="w3-bar-item w3-button" href="javascript:void(0);" title="Salvar (Ctrl+S)" onclick="salvarArquivo();"><i class="fa fa-save" style="font-size:26px;color:#4caf50;"></i><span style="position:relative;top:-4px;left:2px;"></span></a>
+        <a class="w3-bar-item w3-button fa fa-rotate"  title="Mudar visualização" onclick="restack(currentStack)" style="font-size:28px;color:#4caf50;margin-top:-2px;text-decoration: none;"></a>
+        <a class="w3-bar-item w3-button" href="javascript:void(0);" title="Modo Escuro" onclick="apagarLuz()"><i class="fa fa-lightbulb-o" style="font-size:26px;color:#4caf50;"></i><span style="position:relative;top:-4px;left:2px;"></span></a>
+        <a class="w3-button w3-bar-item w3-green w3-hover-white w3-hover-text-green"  style="text-decoration: none;" onclick="submitTryit()">Compilar <i class="fa fa-code" aria-hidden="true"></i></a>
+        <span class="w3-right w3-hide-medium w3-hide-small" style="padding:8px 8px 8px 8px;display:block"></span>
+        <span class="w3-right w3-hide-small" style="padding:8px 0;display:block;float:right;"><span id="framesize"></span></span>
+      </div>
+
+    </div>
+    <div id="shield"></div>
+
+    <a href="javascript:void(0)" id="dragbar"></a>
+    <div id="container" class="">
+      <div id="navbarDropMenu" class="w3-dropdown-content w3-bar-block w3-border" style="z-index:5">
+        <div class="w3-bar-block">
+          <a class="w3-bar-item w3-button" href="javascript:void(0);" title="Novo" onclick="novoArquivo();"><i class="fa fa-file-text" style="font-size:26px;margin-right:10px;"></i><span style="position:relative;top:-4px;left:2px;">Novo codigo</span></a>
+          <a class="w3-bar-item w3-button" href="javascript:void(0);" title="Abrir" onclick="abrirArquivo();"><i class="fa fa-folder-open" style="font-size:26px;margin-right:10px;"></i><span style="position:relative;top:-4px;left:2px;">Abrir codigo</span></a>
+          <a class="w3-bar-item w3-button" href="javascript:void(0);" title="Salvar" onclick="salvarArquivo();"><i class="fa fa-save" style="font-size:26px;margin-right:10px;"></i><span style="position:relative;top:-4px;left:2px;">Salvar codigo</span></a>
+          <a class="w3-bar-item w3-button" href='javascript:void(0);' title="Mudar visualização" onclick="openMenu();restack(currentStack)"><i class="fa fa-rotate" style="font-size:26px;margin-left:-4px;margin-right:8px"></i><span style="position:relative;top:-4px;left:2px;">Mudar visualização</span></a>
+          <a class="w3-bar-item w3-button" href="javascript:void(0);" title="Sair" onclick="fecharEditor()"><i class="fa fa-window-close" style="font-size:26px;margin-right:10px;"></i><span style="position:relative;top:-4px;left:2px;">Sair do Editor</span></a>
+        </div>
+      </div>
+      <div id="menuOverlay" class="w3-overlay w3-transparent" style="cursor:pointer;z-index:4"></div>
+      <div id="textareacontainer">
+        <div id="textarea">
+          <div id="textareawrapper">
+            <textarea class="" autocomplete="off" name="codigoArquivo" id="textareaCode" spellcheck="false" style="white-space: normal;" data-arquivo="<?php echo $arquivo; ?>"><?php
+
+              $abrir = fopen($arquivo , "a+");
+
+              if (file_exists($arquivo)) {
+                while (!feof($abrir)) {
+                  $buffer = fgets($abrir);
+                  echo $buffer;
+                }
+                fclose($abrir);
+              }else{
+                echo "O arquivo não existe.";
+              }
+              ?></textarea>
+              <form id="codeForm" autocomplete="off" style="margin:0px;display:none;">
+                <input type="hidden" name="code" id="code" />
+              </form>
+            </div>
+          </div>
+        </div>
+        <div id="iframecontainer">
+          <div id="iframe">
+            <div id="iframewrapper"></div>
+          </div>
+        </div>
+      </div>
+      <script>
+
+        $(document).ready(function(){
+          apagarLuz(1);
+          restack(0);
+        });
+
+        function fecharEditor() {
+          var tab = window.open("","_top");
+          tab.close();
+        }
+
+        function salvarArquivo(){
+          var resposta = '';
+          $.ajax({
+           type: "POST",
+           url: 'funcoes/func.php',
+           data:{
+            acao:'salvar',
+            dados:$('#textareaCode').val(),
+            arquivo:$('#textareaCode').attr('data-arquivo')
+          },
+          dataType:'json',
+          async:false,
+          success:function(retorno) {
+            resposta=retorno;
+            alertify.set('notifier','position', 'bottom-left');
+            alertify.success('Arquivo salvo com sucesso!');
+          }
+        });
+          return resposta;
+        }
+
+        function novoArquivo()
+        {
+          var x;
+          var r=confirm("Deseja iniciar um novo arquivo ?");
+          if (r==true)
+          {
+            window.location.reload();
+          }else{
+
+          }
+        }
+      </script>
+      <script src="scripts.js"></script>
+
+      <div class="modal fade" id="menuAbrirArquivo" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Abrir Arquivo</h4>
+            </div>
+            <div class="modal-body">
+              <div>
+                <table class="tblRegistros">
+                  <tr>
+                    <th>ID</th>
+                    <th>NOME</th>
+                    <th>DATA</th>
+                    <th>AUTOR</th>
+                    <th>OPÇÕES</th>
+                  </tr>
+                  <?php include 'consulta.php' ?>
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="menuNovoArquivo" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Criar Novo Arquivo</h4>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="usr">Qual o nome do arquivo que deseja criar?</label>
+                <input type="text" class="form-control" id="arquivo" name="arquivo">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+              <button type="button" class="btn btn-success" data-dismiss="modal">Escolher</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="menuInfo" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form name="signup" id="cadArquivo" method="post" action="cadastrando.php">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Informações do arquivo</h4>
+              </div>
+              <div class="modal-body">
+
+                <div class="form-group">
+                  <label for="usr">Nome do arquivo</label>
+                  <input type="text" class="form-control" id="nomeArquivo" name="nomeArquivo">
+                </div>
+                <div class="form-group">
+                  <label for="usr">Data de criação/edição</label>
+                  <input type="date" class="form-control" id="dataArquivo" name="dataArquivo">
+                </div>
+                <div class="form-group">
+                  <label for="autorArquivo">Autor do arquivo</label>
+                  <select class="form-control" id="autorArquivo" name="autorArquivo">
+                    <option selected>Daniel Neitzel</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="autorArquivo">Codigo</label>
+                  <textarea class="" autocomplete="off" name="codigoArquivo" id="textareaCode" spellcheck="false" style="white-space: normal;color: #000000;" data-arquivo="<?php echo $arquivo; ?>"><?php
+
+                    $abrir = fopen($arquivo , "a+");
+
+                    if (file_exists($arquivo)) {
+                      while (!feof($abrir)) {
+                        $buffer = fgets($abrir);
+                        echo $buffer;
+                      }
+                      fclose($abrir);
+                    }else{
+                      echo "O arquivo não existe.";
+                    }
+                    ?></textarea> 
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                  <input type="submit" value="Salvar" class="btn btn-success">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="menuTemplates" role="dialog">
+          <div class="modal-dialog modal-responsive">
+            <div class="modal-content">
+              <div class="col-md-12">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i></button>
+              </div>
+              <div class="col-md-4 text-center">
+                <div class="box">
+                  <div class="box-content">
+                    <h4 class="tag-title"><strong>BASE HTML SIMPLES</strong></h4>
+                    <hr>
+                    <span>utilizar codigo base de <strong>html</strong> simples.</span>
+                    <br>
+                    <hr>
+                    <a href="#" onclick="carregaHTML()" class="btn btn-block btn-primary">Escolher</a>
+                  </div>
+                </div>
+              </div>
+              <div class="areaTemplate">
+                <div class="col-md-4 text-center">
+                  <div class="box">
+                    <div class="box-content">
+                      <h4 class="tag-title"><strong>BOOTSTRAP BASE</strong></h4>
+                      <hr>
+                      <span>utilizar codigo base do <strong>Bootstrap</strong> para construção.</span>
+                      <br>
+                      <hr>
+                      <a href="#" onclick="carregaBootStrap()" class="btn btn-block btn-primary copiar">Escolher</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 text-center">
+                  <div class="box">
+                    <div class="box-content">
+                      <h4 class="tag-title">JQUERY MOBILE</strong></h4>
+                      <hr>
+                      <span>utilizar codigo base do <strong>Jquery Mobile</strong> para construção.</span>
+                      <br>
+                      <hr>
+                      <a href="#" onclick="carregaJqueryMobile()" class="btn btn-block btn-primary copiar">Escolher</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+          $(document).ready(function () {
+            function apagarLuz(){
+              $('#textareaCode').toggleClass("darkmode-txtarea");
+              $('#container').toggleClass("darkmode-content");
+              $('#opts-bar').toggleClass("darkmode-content");
+              $('.modal-content').toggleClass("darkmode-modal");
+              $('.box').toggleClass("darkmode-txtarea");
+            }
+          });
+        </script>
+      </body>
+      </html>
